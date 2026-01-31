@@ -1,0 +1,9 @@
+.git
+*.md
+*.g.dart
+*.freezed.dart
+build
+.dart_tool
+.idea
+.vscode
+*.iml

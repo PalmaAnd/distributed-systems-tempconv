@@ -1,0 +1,26 @@
+# GKE GCE Ingress: /tempconv.v1.TempConv -> Envoy (gRPC-Web), / -> frontend
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tempconv-ingress
+  namespace: tempconv
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /tempconv.v1.TempConv
+            pathType: Prefix
+            backend:
+              service:
+                name: tempconv-envoy
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tempconv-frontend
+                port:
+                  number: 80

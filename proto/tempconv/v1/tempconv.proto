@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package tempconv.v1;
+
+option go_package = "github.com/tempconv/backend/internal/pb/tempconv/v1;tempconv_v1";
+
+// Value holds a single numeric value (temperature).
+message Value {
+  double value = 1;
+}
+
+// TempConv converts between Celsius and Fahrenheit.
+service TempConv {
+  rpc CelsiusToFahrenheit(Value) returns (Value);
+  rpc FahrenheitToCelsius(Value) returns (Value);
+}
