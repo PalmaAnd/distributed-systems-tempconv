@@ -15,18 +15,16 @@ spec:
       labels:
         app: tempconv-frontend
     spec:
-      nodeSelector:
-        kubernetes.io/arch: amd64
       containers:
         - name: frontend
-          image: tempconv-frontend:latest
+          image: us-central1-docker.pkg.dev/tempconverter-487211/tempconv/frontend:1.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
           resources:
             requests:
               memory: "32Mi"
-              cpu: "50m"
+              cpu: "25m"
             limits:
               memory: "64Mi"
               cpu: "100m"

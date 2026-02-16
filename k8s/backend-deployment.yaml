@@ -6,7 +6,7 @@ metadata:
   labels:
     app: tempconv-backend
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: tempconv-backend
@@ -15,33 +15,18 @@ spec:
       labels:
         app: tempconv-backend
     spec:
-      # GKE nodes are AMD64; explicit for clarity
-      nodeSelector:
-        kubernetes.io/arch: amd64
       containers:
         - name: backend
-          image: tempconv-backend:latest
+          image: us-central1-docker.pkg.dev/tempconverter-487211/tempconv/backend:1.0
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
-              name: grpc
-            - containerPort: 8081
-              name: health
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8081
-            initialDelaySeconds: 3
-            periodSeconds: 5
+            - name: grpc
+              containerPort: 50051
+            - name: http
+              containerPort: 8080
           resources:
             requests:
-              memory: "32Mi"
+              memory: "64Mi"
               cpu: "50m"
             limits:
               memory: "128Mi"
@@ -56,7 +41,10 @@ spec:
   selector:
     app: tempconv-backend
   ports:
-    - port: 8080
+    - name: grpc
+      port: 50051
+      targetPort: 50051
+    - name: http
+      port: 8080
       targetPort: 8080
-      name: grpc
   type: ClusterIP
