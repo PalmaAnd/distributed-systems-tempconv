@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc_web.dart';
 
-import 'generated/tempconv/v1/tempconv.pb.dart';
 import 'generated/tempconv/v1/tempconv.pbgrpc.dart';
 
 void main() {
@@ -32,6 +31,11 @@ class ConverterPage extends StatefulWidget {
 }
 
 class _ConverterPageState extends State<ConverterPage> {
+  static const String _grpcWebEndpointOverride = String.fromEnvironment(
+    'GRPC_WEB_ENDPOINT',
+    defaultValue: '',
+  );
+
   final _inputController = TextEditingController();
   String _result = '';
   String? _error;
@@ -39,6 +43,10 @@ class _ConverterPageState extends State<ConverterPage> {
   bool _loading = false;
 
   GrpcWebClientChannel _channel() {
+    if (_grpcWebEndpointOverride.isNotEmpty) {
+      return GrpcWebClientChannel.xhr(Uri.parse(_grpcWebEndpointOverride));
+    }
+
     final base = Uri.base;
     final host = base.host.isEmpty ? 'localhost' : base.host;
     final port = base.hasPort ? base.port : (base.scheme == 'https' ? 443 : 80);

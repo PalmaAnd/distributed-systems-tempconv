@@ -80,15 +80,20 @@ grpcurl -plaintext -d '{"value": 25}' localhost:8080 tempconv.v1.TempConv/Celsiu
 
 **Frontend (gRPC-Web)**
 
-For local dev, the Flutter app calls the same origin. You need Envoy (or another gRPC-Web proxy) in front of the backend so the browser can speak gRPC-Web. Options:
+For local dev, the Flutter app calls the same origin by default.  
+With `flutter run -d web-server`, same-origin points to the Flutter dev server port (for example `http://localhost:41517`), so gRPC POSTs like `/tempconv.v1.TempConv/CelsiusToFahrenheit` return **404** unless you route that path elsewhere.
 
-- Run Envoy locally pointing at the backend, and serve the Flutter app from a host that routes `/tempconv.v1.TempConv` to Envoy (e.g. same port with a reverse proxy).
+You need a gRPC-Web endpoint (Envoy or another gRPC-Web proxy) in front of the backend because the backend on `:8080` is plain gRPC (not gRPC-Web).
+
+Set an explicit gRPC-Web endpoint:
+
+- `--dart-define=GRPC_WEB_ENDPOINT=http://localhost:8081` (replace with your proxy URL)
 - Or run the full stack in Docker/K8s and open the Ingress URL.
 
 ```bash
 cd frontend
 flutter pub get
-flutter run -d chrome
+flutter run -d web-server --dart-define=GRPC_WEB_ENDPOINT=http://localhost:8081
 ```
 
 **Regenerate proto code (if you edit the .proto):**

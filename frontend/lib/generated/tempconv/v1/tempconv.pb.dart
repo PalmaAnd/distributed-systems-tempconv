@@ -39,7 +39,7 @@ class Value extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'Value',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'tempconv.v1'),
       createEmptyInstance: create)
-    ..aD(1, _omitFieldNames ? '' : 'value')
+    ..a<$core.double>(1, _omitFieldNames ? '' : 'value', $pb.PbFieldType.OD)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -67,7 +67,7 @@ class Value extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasValue() => $_has(0);
   @$pb.TagNumber(1)
-  void clearValue() => $_clearField(1);
+  void clearValue() => clearField(1);
 }
 
 const $core.bool _omitFieldNames =
