@@ -1,3 +1,5 @@
+# GKE: Use LoadBalancer services for quick setup, or Ingress for single URL
+# Option A: Two LoadBalancers (simple, two external IPs)
 apiVersion: v1
 kind: Service
 metadata:
@@ -24,3 +26,31 @@ spec:
   ports:
     - port: 80
       targetPort: 80
+---
+# Option B: GCE Ingress - single URL, / serves frontend, /v1/* proxies to backend
+# Uncomment and apply after creating the above services
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: tempconv-ingress
+#   namespace: tempconv
+#   annotations:
+#     kubernetes.io/ingress.class: "gce"
+# spec:
+#   rules:
+#     - http:
+#         paths:
+#           - path: /v1
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: tempconv-backend
+#                 port:
+#                   number: 8080
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: tempconv-frontend
+#                 port:
+#                   number: 80

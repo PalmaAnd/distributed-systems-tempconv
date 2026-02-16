@@ -1,5 +1,0 @@
-.git
-*.md
-*_test.go
-.env
-.env.*
