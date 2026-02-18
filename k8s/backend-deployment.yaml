@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: tempconv-backend:latest
+          image: us-central1-docker.pkg.dev/tempconv-487623/tempconv/tempconv-backend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - name: grpc
