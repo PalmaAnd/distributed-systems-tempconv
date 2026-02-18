@@ -10,7 +10,7 @@ RUN flutter pub get
 COPY . .
 
 # Build web (--no-wasm-dry-run avoids wasm issues in CI)
-ARG GRPC_BACKEND_URL=
+ARG GRPC_BACKEND_URL=http://localhost:8080
 RUN flutter build web --no-wasm-dry-run --release \
   --dart-define=GRPC_BACKEND_URL=$GRPC_BACKEND_URL
 
