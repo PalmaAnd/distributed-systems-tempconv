@@ -12,18 +12,19 @@ class TempConvApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFF8CB9E2),
-      brightness: Brightness.light,
-    ).copyWith(
-      primary: const Color(0xFF5E8FB9),
-      onPrimary: Colors.white,
-      secondary: const Color(0xFFA7C7E3),
-      surface: const Color(0xFFF6FAFF),
-      surfaceContainerHigh: const Color(0xFFEAF3FC),
-      surfaceContainerHighest: const Color(0xFFE2EEFA),
-      outline: const Color(0xFFB6C7D9),
-    );
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: const Color(0xFF8CB9E2),
+          brightness: Brightness.light,
+        ).copyWith(
+          primary: const Color(0xFF5E8FB9),
+          onPrimary: Colors.white,
+          secondary: const Color(0xFFA7C7E3),
+          surface: const Color(0xFFF6FAFF),
+          surfaceContainerHigh: const Color(0xFFEAF3FC),
+          surfaceContainerHighest: const Color(0xFFE2EEFA),
+          outline: const Color(0xFFB6C7D9),
+        );
 
     return MaterialApp(
       title: 'TempConv',
@@ -34,25 +35,32 @@ class TempConvApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFF2F8FF),
         fontFamily: 'Georgia',
         textTheme: ThemeData.light().textTheme.apply(
-              bodyColor: const Color(0xFF2C4258),
-              displayColor: const Color(0xFF2C4258),
-            ),
+          bodyColor: const Color(0xFF2C4258),
+          displayColor: const Color(0xFF2C4258),
+        ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.white.withOpacity(0.72),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.45)),
+            borderSide: BorderSide(
+              color: colorScheme.outline.withOpacity(0.45),
+            ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.45)),
+            borderSide: BorderSide(
+              color: colorScheme.outline.withOpacity(0.45),
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(color: colorScheme.primary, width: 1.8),
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 16,
+          ),
         ),
       ),
       home: const TempConvPage(),
@@ -75,11 +83,26 @@ class _TempConvPageState extends State<TempConvPage> {
   String? _error;
 
   static String get _backendUrl {
-    const url = String.fromEnvironment(
-      'GRPC_BACKEND_URL',
-      defaultValue: 'http://localhost:8080',
-    );
-    return url;
+    const url = String.fromEnvironment('GRPC_BACKEND_URL', defaultValue: '');
+    return url.trim();
+  }
+
+  static Uri _buildEndpointUri(String endpoint) {
+    final configuredBase = _backendUrl;
+    if (configuredBase.isEmpty) {
+      return Uri.parse(endpoint);
+    }
+
+    final normalizedBase =
+        configuredBase.startsWith('http://') ||
+            configuredBase.startsWith('https://')
+        ? configuredBase
+        : 'http://$configuredBase';
+    final baseUri = Uri.parse(normalizedBase);
+    final basePath = baseUri.path.endsWith('/')
+        ? baseUri.path.substring(0, baseUri.path.length - 1)
+        : baseUri.path;
+    return baseUri.replace(path: '$basePath$endpoint');
   }
 
   Future<void> _convert() async {
@@ -110,7 +133,7 @@ class _TempConvPageState extends State<TempConvPage> {
     try {
       final endpoint = _celsiusToFahrenheit ? '/v1/c2f' : '/v1/f2c';
       final resp = await http.post(
-        Uri.parse('$_backendUrl$endpoint'),
+        _buildEndpointUri(endpoint),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'value': value}),
       );
@@ -153,7 +176,11 @@ class _TempConvPageState extends State<TempConvPage> {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFFF4F9FF), Color(0xFFE6F1FC), Color(0xFFD9EAF9)],
+                colors: [
+                  Color(0xFFF4F9FF),
+                  Color(0xFFE6F1FC),
+                  Color(0xFFD9EAF9),
+                ],
               ),
             ),
           ),
@@ -172,7 +199,10 @@ class _TempConvPageState extends State<TempConvPage> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
+                ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 540),
                   child: TweenAnimationBuilder<double>(
@@ -299,16 +329,18 @@ class _TempConvPageState extends State<TempConvPage> {
                                                 : 'Result (°C)',
                                             style: theme.textTheme.titleSmall
                                                 ?.copyWith(
-                                              color: const Color(0xFF4D6883),
-                                            ),
+                                                  color: const Color(
+                                                    0xFF4D6883,
+                                                  ),
+                                                ),
                                           ),
                                           Text(
                                             _result,
                                             style: theme.textTheme.headlineSmall
                                                 ?.copyWith(
-                                              color: colorScheme.primary,
-                                              fontWeight: FontWeight.w700,
-                                            ),
+                                                  color: colorScheme.primary,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
                                           ),
                                         ],
                                       ),
@@ -347,9 +379,7 @@ class _TempConvPageState extends State<TempConvPage> {
       decoration: BoxDecoration(
         color: colorScheme.surface.withOpacity(0.88),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: colorScheme.outline.withOpacity(0.3),
-        ),
+        border: Border.all(color: colorScheme.outline.withOpacity(0.3)),
       ),
       child: Row(
         children: [
@@ -447,10 +477,7 @@ class _BackgroundOrb extends StatelessWidget {
         child: Container(
           width: size,
           height: size,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color,
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
         ),
       ),
     );

@@ -66,12 +66,17 @@ You will need this IP for the frontend build in the next step.
 ## 4) Build and Push Frontend Image (with backend IP)
 
 ```bash
+# Use backend HTTP LoadBalancer IP (service tempconv-backend-lb).
+# Do NOT use gRPC port 50051 here.
 BACKEND_IP=http://YOUR_BACKEND_LB_IP
 
 docker build --platform linux/amd64 \
   --build-arg GRPC_BACKEND_URL=$BACKEND_IP \
   -t tempconv-frontend:latest -f frontend/Dockerfile frontend
 ```
+
+If you pass only an IP/host without scheme, the frontend now normalizes it to
+`http://<host>` automatically.
 
 Tag and push:
 
